@@ -17,7 +17,7 @@
 ## Removed from Original Release
 - Networking code
 - Neuro Killaura
-- IRC support
+- IRC Chat
 
 ---
 
