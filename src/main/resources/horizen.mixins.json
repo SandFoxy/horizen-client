@@ -1,0 +1,46 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.sandfoxy.horizen.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "MinecraftClientMixin",
+    "events.PacketReceiveMixin",
+    "events.PacketSendMixin",
+    "ShowSaturationMixin",
+    "TitleScreenMixin",
+    "events.OnChatMessage",
+    "events.OnSoundPlayedEventMixin",
+    "features.player.NoclipMixin",
+    "features.player.ghosthand.AbstractBlockStateMixin",
+    "features.player.viewmodel.HeldItemRendererMixin",
+    "features.render.ambient.BiomeMixin",
+    "features.render.ambient.ClientPlayNetworkHandlerMixin",
+    "features.render.chams.EntityRenderDispatcherMixin",
+    "features.render.chams.EntityRendererMixin",
+    "features.render.esp.PlayerEntityRendererMixin",
+    "features.render.esp.WorldRendererMixin",
+    "features.render.BackgroundRendererMixin",
+    "features.render.norender.ArmorStandEntityMixin",
+    "features.render.norender.ArmorStandEntityRendererMixin",
+    "features.render.norender.BossbarHudMixin",
+    "features.render.norender.FluidRendererMixin",
+    "features.render.norender.InGameHudMixin",
+    "features.render.norender.InGameOverlayRendererMixin",
+    "imgui.GameRendererMixin",
+    "imgui.GlfwLockerMixin",
+    "imgui.GlStateManagerMixin",
+    "imgui.KeyboardMixin",
+    "imgui.MouseHandlerMixin",
+    "imgui.PostEffectPassMixin",
+    "imgui.TailRenderMixin",
+    "utils.ChatLoggerMixin",
+    "utils.SimpleOptionAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "features.player.nodelay.NoDelayMixin"
+  ]
+}

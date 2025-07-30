@@ -1,0 +1,32 @@
+{
+  "toggle_1": {
+    "category": "master",
+    "sounds": [
+      "horizen:toggle_1"
+    ]
+  },
+  "disable_1": {
+    "category": "master",
+    "sounds": [
+      "horizen:disable_1"
+    ]
+  },
+  "enable_1": {
+    "category": "master",
+    "sounds": [
+      "horizen:enable_1"
+    ]
+  },
+  "error_1": {
+    "category": "master",
+    "sounds": [
+      "horizen:error_1"
+    ]
+  },
+  "location_ping": {
+    "category": "master",
+    "sounds": [
+      "horizen:location_ping"
+    ]
+  }
+} 
