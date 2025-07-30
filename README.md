@@ -1,12 +1,10 @@
 <br/>
 <p align="center">
   <a href="https://github.com/SandFoxy/horizen-client">
-    <img src="logo.png" alt="HORIZEN" width="128" height="128">
+    <img src="logo.png" alt="HORIZEN" width="438" height="71">
   </a>
   <br><br><br>
 </p>
-
-# HORIZEN Client
 
 First Minecraft Hack DLC built with **ImGui**.  
 Fast, minimal, and highly customizable.
