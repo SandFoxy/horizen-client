@@ -93,8 +93,6 @@ public class ClickGUI {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
 
-        ImGuiUils.drawBlur(ImGui.getBackgroundDrawList(), 100,100,100,100, 5);
-
         ImGui.pushFont(FontManager.StemBold12);
         ImGui.getIO().setKeysDown(ImGuiKey.Tab, false);
         setupDocking("Menu Overlay", "menu-dockspace");
