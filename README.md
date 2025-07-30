@@ -1,15 +1,11 @@
-<br/>
 <p align="center">
   <a href="https://github.com/SandFoxy/horizen-client">
     <img src="logo.png" alt="HORIZEN" width="438" height="71">
   </a>
-  <br><br><br>
+  <br><br>
+  <b>First Minecraft Hack DLC built with <span style="font-weight:600;">ImGui</span></b><br>
+  <br><br>
 </p>
-
-First Minecraft Hack DLC built with **ImGui**.  
-Fast, minimal, and highly customizable.
-
----
 
 ## Features
 - ImGui-based interface
