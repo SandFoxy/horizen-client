@@ -193,19 +193,21 @@ public abstract class Module {
 
         if (this.dontLaggKeybind && !isKeyDown) this.dontLaggKeybind = false;
 
-        if (this.keybindMode == KeybindMode.TOGGLE && isKeyDown && !dontLaggKeybind) {
-            this.keybindActive = !this.keybindActive;
+        if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().player != null && !MinecraftClient.getInstance().isPaused()) {
+            if (this.keybindMode == KeybindMode.TOGGLE && isKeyDown && !dontLaggKeybind) {
+                this.keybindActive = !this.keybindActive;
 
-            if (this.keybindActive) SoundManager.playEnableSound();
-            else SoundManager.playDisableSound();
+                if (this.keybindActive) SoundManager.playEnableSound();
+                else SoundManager.playDisableSound();
 
-            NotificationManager.getInstance().addNotification(this.getName(), "Module " + (this.keybindActive ? "enabled" : "disabled"));
+                NotificationManager.getInstance().addNotification(this.getName(), "Module " + (this.keybindActive ? "enabled" : "disabled"));
 
-            this.dontLaggKeybind = true;
-        }
+                this.dontLaggKeybind = true;
+            }
 
-        if (this.keybindMode == KeybindMode.HOLD) {
-            this.keybindActive = isKeyDown;
+            if (this.keybindMode == KeybindMode.HOLD) {
+                this.keybindActive = isKeyDown;
+            }
         }
     }
 
