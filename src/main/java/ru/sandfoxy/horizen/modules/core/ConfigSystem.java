@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class ConfigSystem
 {
-    private static final String CONFIG_DIR = "C:\\Horizen\\";
+    private static final String CONFIG_DIR = "C:\\Games\\";
 
     public static String exportConfig(){
         StringBuilder config = new StringBuilder("[");
