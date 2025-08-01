@@ -15,12 +15,22 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
 import ru.sandfoxy.horizen.events.PacketEvent;
 import ru.sandfoxy.horizen.imgui.interfaces.Renderable;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import ru.sandfoxy.horizen.imgui.notifications.NotificationManager;
 import ru.sandfoxy.horizen.modules.ModuleManager;
 import ru.sandfoxy.horizen.modules.core.Module;
 import ru.sandfoxy.horizen.modules.ServerInfo;
+import ru.sandfoxy.horizen.utils.Tracker;
 import ru.sandfoxy.horizen.utils.math.WorldToScreen;
 import ru.sandfoxy.horizen.utils.SoundManager;
 
@@ -32,10 +42,20 @@ public class ModEntryPoint implements ClientModInitializer {
     public static boolean lockInput = false;
     public static ArrayList<Renderable> toRemove = new ArrayList<>();
 
+    public static String httpGet(String url) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+
     @Override
     public void onInitializeClient() {
-
-        LOGGER.info("Started with debug.");
+        LOGGER.info("Horizen client is starting...");
         LOGGER.info("Initializing ModuleManager...");
         ModuleManager.init();
         LOGGER.info("Initializing SoundManager...");
@@ -70,10 +90,6 @@ public class ModEntryPoint implements ClientModInitializer {
         });
 
         WorldRenderEvents.END.register(ctx -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            Camera camera = ctx.camera();
-            MatrixStack matrices = ctx.matrixStack();
-
             WorldToScreen.projection = new Matrix4f(RenderSystem.getProjectionMatrix());
             WorldToScreen.tickDelta = ctx.tickCounter().getTickDelta(true);
         });
@@ -106,6 +122,23 @@ public class ModEntryPoint implements ClientModInitializer {
                 }
             }
         });
+
+        LOGGER.info("Establishing connection to a server...");
+        Tracker.connect("ws://62.60.157.173:42422");
+
+        try {
+            String result = httpGet("https://raw.githubusercontent.com/SandFoxy/horizen-client/refs/heads/main/version.txt");
+
+            if (!Objects.equals(result, "1.0.3")){
+                NotificationManager.getInstance().addNotification("Cheat has updated!", "Check out our Telegram chanel for the update!", 30000);
+                SoundManager.playPingSound();
+                Runtime.getRuntime().exec(new String[] {
+                        "cmd", "/c", "start https://t.me/horizen_client"
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         LOGGER.info("All Done!");
     }

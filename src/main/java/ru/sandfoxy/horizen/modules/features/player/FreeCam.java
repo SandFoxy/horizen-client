@@ -44,27 +44,23 @@ public class FreeCam extends Module {
         mc.player.noClip = true;
         cameraPos = mc.player.getPos();
     }
-    
+
     @Override
     public void onDisable() {
         if (mc.player == null || mc.world == null) return;
-    
+
         mc.player.noClip = false;
-    
-        if (originalPos != null && !Float.isNaN(originalYaw) && !Float.isNaN(originalPitch)) {
-            mc.player.setPosition(originalPos);
-            mc.player.setYaw(originalYaw);
-            mc.player.setPitch(originalPitch);
-        }
-    
+        mc.player.setPosition(originalPos);
+        mc.player.setYaw(originalYaw);
+        mc.player.setPitch(originalPitch);
+
         mc.setCameraEntity(mc.player);
-    
+
         if (fakePlayer != null) {
             mc.world.removeEntity(fakePlayer.getId(), Entity.RemovalReason.DISCARDED);
             fakePlayer = null;
         }
     }
-
 
     @Override
     public void startTick() {

@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
+import ru.sandfoxy.horizen.ModEntryPoint;
 import ru.sandfoxy.horizen.events.PacketEvent;
 import ru.sandfoxy.horizen.imgui.notifications.NotificationManager;
 import ru.sandfoxy.horizen.modules.core.type.Separator;
@@ -193,7 +194,13 @@ public abstract class Module {
 
         if (this.dontLaggKeybind && !isKeyDown) this.dontLaggKeybind = false;
 
-        if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().player != null && !MinecraftClient.getInstance().isPaused()) {
+        if (
+                MinecraftClient.getInstance().world != null  &&
+                MinecraftClient.getInstance().player != null &&
+                !MinecraftClient.getInstance().isPaused() &&
+                !MinecraftClient.getInstance().inGameHud.getChatHud().isChatFocused() &&
+                !ModEntryPoint.shouldCancelGameKeyboardInputs()
+        ) {
             if (this.keybindMode == KeybindMode.TOGGLE && isKeyDown && !dontLaggKeybind) {
                 this.keybindActive = !this.keybindActive;
 

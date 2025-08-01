@@ -51,14 +51,12 @@ dependencies {
     shadow "io.github.spair:imgui-java-natives-linux:${project.imguiVersion}"
     implementation "io.github.spair:imgui-java-natives-macos:${project.imguiVersion}"
     shadow "io.github.spair:imgui-java-natives-macos:${project.imguiVersion}"
-
-    //Neuro Killaura
     implementation 'com.google.code.gson:gson:2.10.1'
     shadow 'com.google.code.gson:gson:2.10.1'
 
     //Audio Player
-//    implementation 'dev.redstones.mediaplayerinfo:MediaPlayerInfo:0.1.0'
-//    shadow 'dev.redstones.mediaplayerinfo:MediaPlayerInfo:0.1.0'
+    //implementation 'dev.redstones.mediaplayerinfo:MediaPlayerInfo:0.1.0'
+    //shadow 'dev.redstones.mediaplayerinfo:MediaPlayerInfo:0.1.0'
 
     //WebSocket
     implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.18'
@@ -118,16 +116,5 @@ publishing {
                 builtBy remapSourcesJar
             }
         }
-    }
-    repositories {
-//        maven {
-//            credentials {
-//                username "$mavenUser"
-//                password "$mavenPassword"
-//            }
-//            name = 'breadloaf.public'
-//            url = 'https://maven.breadloaf.xyz/repository/public'
-//        }
-
     }
 }
