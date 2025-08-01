@@ -76,27 +76,35 @@ public class ElytraHelper extends Module {
         return -1;
     }
 
-    public int getChestplateSlot(){
+    public int getChestplateSlot() {
         if (mc.player == null) return -1;
-        
+
+        int bestSlot = -1;
+        int bestPriority = -1;
+
         for (int i = 0; i < 36; i++) {
             ItemStack stack = mc.player.getInventory().getStack(i);
             if (stack.isEmpty()) continue;
-            
-            String itemName = stack.getItem().toString().toLowerCase();
-            // Проверяем различные типы нагрудников
-            if (itemName.contains("chestplate") || 
-                itemName.contains("туника") || 
-                itemName.contains("нагрудник") ||
-                itemName.contains("leather_chestplate") ||
-                itemName.contains("chainmail_chestplate") ||
-                itemName.contains("iron_chestplate") ||
-                itemName.contains("golden_chestplate") ||
-                itemName.contains("diamond_chestplate") ||
-                itemName.contains("netherite_chestplate")) {
-                return i;
+
+            Item item = stack.getItem();
+            int priority = getChestplatePriority(item);
+
+            if (priority > bestPriority) {
+                bestPriority = priority;
+                bestSlot = i;
             }
         }
+
+        return bestSlot;
+    }
+
+    private int getChestplatePriority(Item item) {
+        if (item == Items.NETHERITE_CHESTPLATE) return 5;
+        if (item == Items.DIAMOND_CHESTPLATE) return 4;
+        if (item == Items.IRON_CHESTPLATE) return 3;
+        if (item == Items.GOLDEN_CHESTPLATE) return 2;
+        if (item == Items.CHAINMAIL_CHESTPLATE) return 1;
+        if (item == Items.LEATHER_CHESTPLATE) return 0;
         return -1;
     }
 
