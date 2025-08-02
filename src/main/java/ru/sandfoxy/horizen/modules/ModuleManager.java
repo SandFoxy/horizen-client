@@ -11,6 +11,7 @@ import ru.sandfoxy.horizen.modules.features.player.*;
 import ru.sandfoxy.horizen.modules.features.render.*;
 import ru.sandfoxy.horizen.modules.features.render.FogCustom;
 import ru.sandfoxy.horizen.modules.features.misc.*;
+import ru.sandfoxy.horizen.modules.features.misc.ChestStealer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +62,14 @@ public class ModuleManager {
         modules.add(new FastAnchor());
         modules.add(new Pet());
         modules.add(new NFD());
+        modules.add(new ChestStealer());
+        modules.add(new GPS());
         modules.add(new ServerCrasher());
         modules.add(new FakeDir());
         modules.add(new Unhook());
 
         //Internals
         modules.add(new FriendList());
-        modules.add(new GPS());
-        ModuleManager.getByName("GPS").toggle(true);
         modules.add(new ChatHandler());
         ModuleManager.getByName("ChatHandler").toggle(true);
 

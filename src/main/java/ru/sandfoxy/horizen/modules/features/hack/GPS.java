@@ -24,7 +24,7 @@ public class GPS extends Module {
     public static SaveableList gpsPoints = new SaveableList("GPSPoints");
     
     public GPS() {
-        super("GPS", CATEGORY.SETTINGS, "Hmmm. You shouldn't see this...");
+        super("GPS", CATEGORY.MISC, "GPS navigation system");
     }
 
     @Override

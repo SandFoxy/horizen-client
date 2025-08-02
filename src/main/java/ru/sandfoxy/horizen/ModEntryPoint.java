@@ -129,7 +129,7 @@ public class ModEntryPoint implements ClientModInitializer {
         try {
             String result = httpGet("https://raw.githubusercontent.com/SandFoxy/horizen-client/refs/heads/main/version.txt");
 
-            if (!Objects.equals(result, "1.0.3")){
+            if (!Objects.equals(result, "1.0.4")){
                 NotificationManager.getInstance().addNotification("Cheat has updated!", "Check out our Telegram chanel for the update!", 30000);
                 SoundManager.playPingSound();
                 Runtime.getRuntime().exec(new String[] {

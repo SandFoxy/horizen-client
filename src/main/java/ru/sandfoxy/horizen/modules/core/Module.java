@@ -144,6 +144,7 @@ public abstract class Module {
         RENDER("\uf03e RENDER"),
         PLAYER("\uf007 PLAYER"),
         MISC("\uf085 MISC"),
+        GPS("\uf3c5 GPS"),
         SETTINGS("\uf013 SETTINGS");
 
         private final String description;

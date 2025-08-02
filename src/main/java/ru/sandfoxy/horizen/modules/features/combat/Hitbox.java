@@ -12,7 +12,7 @@ import ru.sandfoxy.horizen.modules.core.type.Slider;
 
 
 public class Hitbox extends Module {
-    private final Slider sizeSlider = new Slider(1.f, 0.1f, 5.f, "Expand", Slider.SliderType.FLOAT);
+    private final Slider sizeSlider = new Slider(0.1f, 0.01f, 3.f, "Expand", Slider.SliderType.FLOAT);
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
     public Hitbox() {

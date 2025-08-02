@@ -18,6 +18,7 @@ import ru.sandfoxy.horizen.modules.core.ConfigSystem;
 import ru.sandfoxy.horizen.modules.core.Module;
 import ru.sandfoxy.horizen.modules.core.Setting;
 import ru.sandfoxy.horizen.modules.features.hack.FriendList;
+import ru.sandfoxy.horizen.modules.features.hack.GPS;
 import ru.sandfoxy.horizen.utils.SoundManager;
 import ru.sandfoxy.horizen.utils.others.GLFWKeyMapper;
 import ru.sandfoxy.horizen.utils.animations.ContinualAnimation;
@@ -51,6 +52,12 @@ public class ClickGUI {
     private static final ImString configName = new ImString();
     static Integer selectedFriend = 0;
     private static final ImString friendName = new ImString();
+    
+    static Integer selectedGPSPoint = 0;
+    private static final ImString gpsPointName = new ImString();
+    private static final ImString gpsPointX = new ImString();
+    private static final ImString gpsPointY = new ImString();
+    private static final ImString gpsPointZ = new ImString();
 
     private static final Map<Module, ContinualAnimation> moduleHeightAnimations = new HashMap<>();
     private static final float ANIMATION_DURATION = 25; // ms
@@ -133,7 +140,7 @@ public class ClickGUI {
             menuAlphaAnim.animate(ModEntryPoint.menuOpened ? 1f : 0f, (int)MENU_ANIMATION_DURATION);
             float alpha = menuAlphaAnim.getOutput();
             ImVec4 frameBg = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
-            ImGui.showDemoWindow();
+
             if (alpha > 0.01f) {
                 ImGuiUils.centerMenu(800, 555);
                 ImGui.setNextWindowSize(800, 555);
@@ -142,6 +149,8 @@ public class ClickGUI {
 
                 ImGui.beginChild("##Caterory", 220, 494, true);
                 for (Module.CATEGORY category : Module.CATEGORY.values()){
+                    if (category == Module.CATEGORY.GPS && !ModuleManager.getByName("GPS").isEnabledRaw()) continue;
+
                     Module.CATEGORY nextCategory = currentCategory;
 
                     ImVec4 activeColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
@@ -173,14 +182,14 @@ public class ClickGUI {
                 //Modules Child
                 ImGui.setCursorPosY(25);
                 ImGui.setCursorPosX(233);
-                ImGui.beginChild("##Modules", 558, 520, currentCategory != Module.CATEGORY.SETTINGS, ImGuiWindowFlags.NoScrollbar);
+                ImGui.beginChild("##Modules", 558, 520, currentCategory != Module.CATEGORY.SETTINGS && currentCategory != Module.CATEGORY.GPS, ImGuiWindowFlags.NoScrollbar);
                 {
                     float leftY = ImGui.getCursorPosY();
                     float rightY = leftY;
                     int visibleIndex = 0;
 
                     for (int i = 0; i < ModuleManager.getModules().size(); i++) {
-                        if (currentCategory == Module.CATEGORY.SETTINGS && searchInput.isEmpty()){
+                        if ((currentCategory == Module.CATEGORY.SETTINGS || currentCategory == Module.CATEGORY.GPS) && searchInput.isEmpty()){
                             i = ModuleManager.getModules().size();
                             continue;
                         }
@@ -266,6 +275,124 @@ public class ClickGUI {
                         //Module Box End
 
                         visibleIndex++;
+                    }
+
+                    //GPS Page
+                    if (currentCategory == Module.CATEGORY.GPS && searchInput.isEmpty()){
+                        ImGui.beginChild("##GPSManager", 275f, 520, true, ImGuiWindowFlags.NoScrollbar);
+                        {
+                            ImGui.pushFont(StemBold16);
+                            ImGui.text("GPS Manager");
+                            ImGui.popFont();
+
+                            ImGui.spacing();
+
+                            ImGui.pushStyleColor(ImGuiCol.ChildBg, ImGui.getColorU32(frameBg.x,frameBg.y,frameBg.z, frameBg.w));
+                            ImGui.beginChild("##GPSPoints", 259f, 300, true, ImGuiWindowFlags.NoScrollbar);
+                            {
+                                ImGui.pushFont(StemBold16);
+
+                                List<GPS.GPSPoint> gpsPoints = GPS.getAllGPSPoints();
+                                for (int i = 0; i < gpsPoints.size(); i++) {
+                                    GPS.GPSPoint point = gpsPoints.get(i);
+                                    String displayText = point.name.isEmpty() ? 
+                                        String.format("Point %d (%d, %d, %d)", i + 1, point.x, point.y, point.z) :
+                                        String.format("%s (%d, %d, %d)", point.name, point.x, point.y, point.z);
+                                    
+                                    boolean selected = selectedGPSPoint == i;
+                                    if (ImGui.selectable(displayText, selected, ImGuiSelectableFlags.DontClosePopups)) {
+                                        selectedGPSPoint = i;
+                                    }
+                                }
+                                ImGui.popFont();
+
+                                ImGui.spacing();
+                            }
+                            ImGui.endChild();
+                            ImGui.popStyleColor();
+
+                            if (ImGui.button("Add Current Position", 259f, 30)){
+                                if (mc.player != null) {
+                                    GPS.addGPSPoint((int)mc.player.getX(), (int)mc.player.getY(), (int)mc.player.getZ(), "Player Position");
+                                }
+                            }
+                            if (ImGui.button("Edit Selected", 259f, 30)){
+                                if (selectedGPSPoint >= 0 && selectedGPSPoint < GPS.getAllGPSPoints().size()) {
+                                    GPS.GPSPoint point = GPS.getAllGPSPoints().get(selectedGPSPoint);
+                                    gpsPointName.set(point.name);
+                                    gpsPointX.set(String.valueOf(point.x));
+                                    gpsPointY.set(String.valueOf(point.y));
+                                    gpsPointZ.set(String.valueOf(point.z));
+                                }
+                            }
+                            if (ImGui.button("Delete Selected", 259f, 30)){
+                                if (selectedGPSPoint >= 0 && selectedGPSPoint < GPS.getAllGPSPoints().size()) {
+                                    GPS.removeGPSPointByIndex(selectedGPSPoint);
+                                    selectedGPSPoint = 0;
+                                }
+                            }
+                            if (ImGui.button("Clear All Points", 259f, 30)){
+                                GPS.clearAllGPSPoints();
+                                selectedGPSPoint = 0;
+                            }
+                        }
+                        ImGui.endChild();
+
+                        ImGui.sameLine();
+
+                        ImGui.beginChild("##GPSAddPoint", 275f, 520, true, ImGuiWindowFlags.NoScrollbar);
+                        {
+                            ImGui.pushFont(StemBold16);
+                            ImGui.text("Add GPS Point");
+                            ImGui.popFont();
+
+                            ImGui.spacing();
+
+                            ImGui.text("Point Name:");
+                            ImGui.setNextItemWidth(259f);
+                            ImGui.inputTextWithHint("##PointName", "Enter point name", gpsPointName);
+
+                            ImGui.text("X Coordinate:");
+                            ImGui.setNextItemWidth(259f);
+                            ImGui.inputTextWithHint("##PointX", "Enter X coordinate", gpsPointX);
+
+                            ImGui.text("Y Coordinate:");
+                            ImGui.setNextItemWidth(259f);
+                            ImGui.inputTextWithHint("##PointY", "Enter Y coordinate", gpsPointY);
+
+                            ImGui.text("Z Coordinate:");
+                            ImGui.setNextItemWidth(259f);
+                            ImGui.inputTextWithHint("##PointZ", "Enter Z coordinate", gpsPointZ);
+
+                            ImGui.spacing();
+
+                            String buttonText = (selectedGPSPoint >= 0 && selectedGPSPoint < GPS.getAllGPSPoints().size()) ? "Update Point" : "Add Point";
+                            if (ImGui.button(buttonText, 259f, 30)){
+                                try {
+                                    int x = Integer.parseInt(gpsPointX.get());
+                                    int y = Integer.parseInt(gpsPointY.get());
+                                    int z = Integer.parseInt(gpsPointZ.get());
+                                    
+                                    if (selectedGPSPoint >= 0 && selectedGPSPoint < GPS.getAllGPSPoints().size()) {
+                                        // Редактируем существующую точку
+                                        GPS.removeGPSPointByIndex(selectedGPSPoint);
+                                        GPS.addGPSPoint(x, y, z, gpsPointName.get());
+                                        selectedGPSPoint = 0;
+                                    } else {
+                                        // Добавляем новую точку
+                                        GPS.addGPSPoint(x, y, z, gpsPointName.get());
+                                    }
+                                    
+                                    gpsPointName.set("");
+                                    gpsPointX.set("");
+                                    gpsPointY.set("");
+                                    gpsPointZ.set("");
+                                } catch (NumberFormatException e) {
+                                    // Ошибка парсинга координат
+                                }
+                            }
+                        }
+                        ImGui.endChild();
                     }
 
                     //Settings Page

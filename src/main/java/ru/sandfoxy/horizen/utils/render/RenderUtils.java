@@ -239,10 +239,13 @@ public class RenderUtils {
     }
 
     public static void titlescreenRender(DrawContext context, float tickDelta){
-        renderChangelog(context,5,5, "Gyrbix ass fixed", LogType.FIXED);
-        renderChangelog(context,5,23, "Gyrbix anal added", LogType.ADD);
-        renderChangelog(context,5,41, "Gyrbix ass fixed", LogType.REMOVED);
-        renderChangelog(context,5,59, "Gyrbix anal added", LogType.IMPROVED);
+        int startY = 5;
+        int lineHeight = 18;
+        
+        renderChangelog(context, 5, startY + lineHeight, "Added Chest Stealler", LogType.ADD);
+        renderChangelog(context, 5, startY + lineHeight * 2, "Added GPS Menu", LogType.ADD);
+        renderChangelog(context, 5, startY + lineHeight * 3, "Hitbox size is now more precise", LogType.IMPROVED);
+        renderChangelog(context, 5, startY + lineHeight * 4, "ImGui Demo removed", LogType.REMOVED);
     }
 
     private enum LogType{
