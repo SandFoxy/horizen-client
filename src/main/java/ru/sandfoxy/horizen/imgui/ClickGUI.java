@@ -219,7 +219,6 @@ public class ClickGUI {
                         } else { ImGui.setCursorPosY(rightY); ImGui.setCursorPosX(285); rightY += animatedHeight + 5f;}
 
                         //Module Box Start
-
                         ImGui.pushStyleColor(ImGuiCol.ChildBg, ImGui.getColorU32(frameBg.x,frameBg.y,frameBg.z, frameBg.w));
                         ImGui.beginChild("##" + module.getName(), 265f, animatedHeight, true, ImGuiWindowFlags.NoScrollbar);
 
@@ -432,15 +431,47 @@ public class ClickGUI {
                             ImGui.setNextItemWidth(259f);
                             ImGui.inputTextWithHint("##ConfigName", "Config Name", configName);
                             if (ImGui.button("Save", 259f, 30)){
-                                ConfigSystem.saveConfigToFile(configName.get());
-                                configList = ConfigSystem.getConfigList();
+                                if(!configName.isEmpty()) {
+                                    ConfigSystem.saveConfigToFile(configName.get());
+                                    configList = ConfigSystem.getConfigList();
+                                } else {
+                                    NotificationManager.getInstance().addNotification(
+                                            "Config",
+                                            "Select the config before save it",
+                                            5000
+                                    );
+                                }
                             }
                             if (ImGui.button("Load", 259f, 30)){
-                                ConfigSystem.loadConfigFromFile(configName.get());
+                                if(configList.isEmpty()){
+                                    NotificationManager.getInstance().addNotification(
+                                            "Config",
+                                            "Create or refresh configs, you don't have any configs",
+                                            5000
+                                    );
+                                    return;
+                                }
+                                if(!configName.isEmpty()) {
+                                    ConfigSystem.loadConfigFromFile(configName.get());
+                                } else {
+                                    NotificationManager.getInstance().addNotification(
+                                            "Config",
+                                            "Select the config before loading it",
+                                            5000
+                                    );
+                                }
                             }
                             if (ImGui.button("Create", 259f, 30)){
-                                ConfigSystem.saveConfigToFile(configName.get());
-                                configList = ConfigSystem.getConfigList();
+                                if(!configName.isEmpty()) {
+                                    ConfigSystem.saveConfigToFile(configName.get());
+                                    configList = ConfigSystem.getConfigList();
+                                } else {
+                                    NotificationManager.getInstance().addNotification(
+                                            "Config",
+                                            "The config must have a name!",
+                                            5000
+                                    );
+                                }
                             }
                             if (ImGui.button("Refresh", 259f, 30)){
                                 configList = ConfigSystem.getConfigList();
@@ -482,10 +513,26 @@ public class ClickGUI {
                             ImGui.setNextItemWidth(259f);
                             ImGui.inputTextWithHint("##FriendName", "Friend Name", friendName);
                             if (ImGui.button("Create", 259f, 30)){
-                                FriendList.friendList.add(friendName.get());
+                                if(!friendName.isEmpty()) {
+                                    FriendList.friendList.add(friendName.get());
+                                } else {
+                                    NotificationManager.getInstance().addNotification(
+                                            "Friends",
+                                            "Write friend's nickname",
+                                            5000
+                                    );
+                                }
                             }
                             if (ImGui.button("Delete", 259f, 30)){
-                                FriendList.friendList.remove(friends.get(selectedFriend));
+                                if(!friends.isEmpty()) {
+                                    FriendList.friendList.remove(friends.get(selectedFriend));
+                                } else {
+                                    NotificationManager.getInstance().addNotification(
+                                            "Friends",
+                                            "There is no one to delete",
+                                            5000
+                                    );
+                                }
                             }
                             ImGui.newLine();
                             ImGui.spacing();
