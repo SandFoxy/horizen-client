@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ConfigSystem
 {
-    private static final String CONFIG_DIR = "C:\\Games\\";
+    private static final Path CONFIG_DIR = Paths.get("C:", "Games");
 
     public static String exportConfig(){
         StringBuilder config = new StringBuilder("[");
@@ -60,10 +62,9 @@ public class ConfigSystem
                     3000
             );
         } catch (JsonSyntaxException e) {
-            System.out.println(e);
             NotificationManager.getInstance().addNotification(
                     "Config System",
-                    "Failed to load config, " + e,
+                    "Failed to load config, " + content,
                     3000
             );
         }
@@ -71,29 +72,21 @@ public class ConfigSystem
 
     public static void saveConfigToFile(String configName) {
         try {
-            // Create directory if it doesn't exist
-            File directory = new File(CONFIG_DIR);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
+            Path configPath = CONFIG_DIR.resolve(configName + ".json");
 
-            // Save config to file
             String configContent = exportConfig();
-            File configFile = new File(CONFIG_DIR + configName + ".json");
-            FileWriter writer = new FileWriter(configFile);
-            writer.write(configContent);
-            writer.close();
+            Files.write(configPath, configContent.getBytes());
 
             NotificationManager.getInstance().addNotification(
                     "Config System",
-                    "Config saved to " + configFile.getAbsolutePath(),
+                    "Config saved to " + configPath.toAbsolutePath(),
                     3000
             );
         } catch (IOException e) {
             System.out.println("Failed to save config: " + e.getMessage());
             NotificationManager.getInstance().addNotification(
                     "Config System",
-                    "Failed to save config!",
+                    "Failed to save config: " + e.getMessage(),
                     3000
             );
         }
@@ -101,23 +94,24 @@ public class ConfigSystem
 
     public static void loadConfigFromFile(String configName) {
         try {
-            File configFile = new File(CONFIG_DIR + configName + ".json");
-            if (!configFile.exists()) {
+            Path configPath = CONFIG_DIR.resolve(configName + ".json");
+
+            if (!Files.exists(configPath)) {
                 NotificationManager.getInstance().addNotification(
                         "Config System",
-                        "Config file not found!",
+                        "Config file not found: " + configPath.getFileName(),
                         3000
                 );
                 return;
             }
 
-            String content = new String(Files.readAllBytes(configFile.toPath()));
+            String content = new String(Files.readAllBytes(configPath));
             loadConfig(content);
         } catch (IOException e) {
             System.out.println("Failed to load config: " + e.getMessage());
             NotificationManager.getInstance().addNotification(
                     "Config System",
-                    "Failed to load config!",
+                    "Failed to load config: " + e.getMessage(),
                     3000
             );
         }
@@ -125,19 +119,16 @@ public class ConfigSystem
 
     public static List<String> getConfigList() {
         try {
-            File directory = new File(CONFIG_DIR);
-            if (!directory.exists()) {
-                directory.mkdirs();
-                return List.of();
-            }
-
-            return Files.list(Paths.get(CONFIG_DIR))
+            return Files.list(CONFIG_DIR)
                     .filter(path -> path.toString().endsWith(".json"))
-                    .map(path -> path.getFileName().toString().replace(".json", ""))
-                    .toList();
+                    .map(path -> {
+                        String fileName = path.getFileName().toString();
+                        return fileName.substring(0, fileName.lastIndexOf('.'));
+                    })
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             System.out.println("Failed to get config list: " + e.getMessage());
-            return List.of();
+            return Collections.emptyList();
         }
     }
 }
